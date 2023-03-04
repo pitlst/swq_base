@@ -1,7 +1,8 @@
+#------------------初始部分------------------
 # 要求并设置cmake的最低版本，版本不符合要求不允许编译
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 # 设置项目名
-set(PROJECT_NAME cmake_study)
+set(PROJECT_NAME swq_base)
 # 在这里直接指定项目为c++项目，节约查找tool chain的时间
 project(${PROJECT_NAME} VERSION 1.0.0 LANGUAGES CXX)
 # 设置c++标准等级和编译后输出路径
@@ -17,18 +18,41 @@ if(NOT DEFINED CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 # 可选：设置opencv的库路径
-set(OpenCV_DIR "/home/cheakf/Downloads/opencv-4.6.0/build")
+# set(OpenCV_DIR "/home/cheakf/Downloads/opencv-4.6.0/build")
+# 开启测试
+enable_testing()
 # 指定头文件在对应的文件夹中寻找
 include_directories(include)
+
+
+#------------------编译部分------------------
 # 搜索src下源文件存入DIR_SRCS变量
 FILE (GLOB M_SRCS "src/*.cpp")
 # 找到所有声明，保存到变量里
 FILE (GLOB M_INCLUDES "include/*.h")
 # 找到需要的依赖
-find_package(OpenCV REQUIRED)
+# find_package(OpenCV REQUIRED)
 # 导入头文件
-include_directories(${OpenCV_INCLUDE_DIRS})
+# include_directories(${OpenCV_INCLUDE_DIRS})
 # 生成目标可执行文件
-add_executable(${PROJECT_NAME} ${M_SRCS} ${M_INCLUDES})
+add_executable(test_json ${PROJECT_SOURCE_DIR}/test/test_json.cpp ${M_SRCS} ${M_INCLUDES})
+
+add_executable(test_xml ${PROJECT_SOURCE_DIR}/test/test_xml.cpp ${M_SRCS} ${M_INCLUDES})
+add_executable(test_ini ${PROJECT_SOURCE_DIR}/test/test_ini.cpp ${M_SRCS} ${M_INCLUDES})
+add_executable(test_string ${PROJECT_SOURCE_DIR}/test/test_string.cpp ${M_SRCS} ${M_INCLUDES})
+add_executable(test_high_num ${PROJECT_SOURCE_DIR}/test/test_high_num.cpp ${M_SRCS} ${M_INCLUDES})
 # 链接动态库
-target_link_libraries(${PROJECT_NAME} PRIVATE pthread ${OpenCV_LIBS})
+# target_link_libraries(test_json PRIVATE pthread ${OpenCV_LIBS})
+# target_link_libraries(test_xml PRIVATE pthread ${OpenCV_LIBS})
+# target_link_libraries(test_ini PRIVATE pthread ${OpenCV_LIBS})
+# target_link_libraries(test_string PRIVATE pthread ${OpenCV_LIBS})
+# target_link_libraries(test_high_num PRIVATE pthread ${OpenCV_LIBS})
+
+
+#------------------测试部分------------------
+add_test(NAME test_json COMMAND test_json)
+add_test(NAME test_xml COMMAND test_json)
+add_test(NAME test_ini COMMAND test_json)
+add_test(NAME test_string COMMAND test_json)
+add_test(NAME test_high_num COMMAND test_json)
+
