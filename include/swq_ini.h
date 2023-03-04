@@ -10,7 +10,14 @@ using swq::get_file_str;
 
 namespace swq
 {
-    
+    class ini
+    {
+    public:
+        ini();
+        ~ini();
+
+    private:
+    };
 }
 
 #endif
