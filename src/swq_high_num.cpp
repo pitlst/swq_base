@@ -772,8 +772,6 @@ using namespace swq;
 high_float::high_float()
 {
     sign = true;
-    front_point.emplace_back(0);
-    back_point.emplace_back(0);
 }
 
 high_float::high_float(int input_num)
@@ -813,7 +811,7 @@ high_float::high_float(const std::string &input_num)
         if (ch == '.')
         {
             type = false;
-            iter++;
+            continue;
         }
         //读取正负号
         if (iter == input_num.cbegin())
@@ -821,17 +819,27 @@ high_float::high_float(const std::string &input_num)
             if (ch == '-')
             {
                 sign = false;
+                continue;
+            }
+            else if (ch == '+')
+            {
+                continue;
             }
         }
+        //遇到非数字停止读取
+        if (std::isdigit(ch) == 0)
+        {
+            break;
+        }
+        
         //写入时将字符串转换为数字存储
         if (type)
-            front_point.emplace_back((char)((*iter) - '0'));
+            front_point.emplace_back((char)(ch - '0'));
         else
-            back_point.emplace_back((char)((*iter) - '0'));
+            back_point.emplace_back((char)(ch - '0'));
     }
-
     //去除多余的0
-    trim();
+    trim();    
 }
 
 high_float::high_float(const char *input_num)
@@ -930,7 +938,6 @@ std::string high_float::str() const
     {
         ss << "-";
     }
-
     for (auto iter = front_point.cbegin(); iter < front_point.cend(); iter++)
     {
         ss << (int)(*iter);
