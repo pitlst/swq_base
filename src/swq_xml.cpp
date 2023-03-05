@@ -139,6 +139,55 @@ void xml::append(const xml &child)
     m_children->emplace_back(child);
 }
 
+void xml::remove(int index)
+{
+    if ((m_children != nullptr) && (m_children->size() > index))
+    {
+        int label = 0;
+        for (auto it = m_children->begin(); it != m_children->end(); it++)
+        {
+            if (label != index)
+            {
+                label++;
+            }
+            else
+            {
+                m_children->erase(it);
+                break;
+            }
+        }
+    }
+}
+
+void xml::remove(const std::string &name)
+{
+    if (m_attrs != nullptr)
+    {
+        auto it = m_attrs->find(name);
+        if (it != m_attrs->end())
+        {
+            m_attrs->erase(it);
+        }
+    }
+}
+
+bool xml::has(int index)
+{
+    
+}
+
+bool xml::has(const std::string &key)
+{
+}
+
+bool xml::has_name()
+{
+}
+
+bool xml::has_text()
+{
+}
+
 std::string xml::str() const
 {
     if (m_name == nullptr)

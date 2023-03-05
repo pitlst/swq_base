@@ -40,9 +40,16 @@ namespace swq
         void attr(const std::string & key, const std::string & value);
 
         void append(const xml & child);
+        void remove(int index);
+        void remove(const std::string & name);
+        void clear();
+        bool has(int index);
+        bool has(const std::string &key);
+        bool has_name();
+        bool has_text();
         int size();
         std::string str() const;
-        void clear();
+        
 
         // 迭代器
 
