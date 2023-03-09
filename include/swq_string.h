@@ -3,7 +3,10 @@
 
 namespace swq
 {
-    
+    class string
+    {
+        
+    }
 }
 
 #endif

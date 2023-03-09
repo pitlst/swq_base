@@ -2,26 +2,61 @@
 
 using namespace swq;
 
-ini::ini() : m_section(nullptr), m_value(nullptr)
+ini_section::ini_section() : m_section(nullptr), m_value(nullptr)
 {
 }
 
-ini::ini(const char *name) : m_section(nullptr), m_value(nullptr)
-{
-    m_section = new std::string(name);
-}
-
-ini::ini(const std::string &name) : m_section(nullptr), m_value(nullptr)
+ini_section::ini_section(const char *name) : m_section(nullptr), m_value(nullptr)
 {
     m_section = new std::string(name);
 }
 
-ini::~ini()
+ini_section::ini_section(const std::string &name) : m_section(nullptr), m_value(nullptr)
+{
+    m_section = new std::string(name);
+}
+
+ini_section::~ini_section()
 {
     clear();
 }
 
-void ini::clear()
+std::string ini_section::section() const
+{
+
+}
+
+void ini_section::section(const std::string &section)
+{
+
+}
+
+std::string ini_section::value(const std::string &name) const
+{
+
+}
+
+std::string ini_section::name(const std::string &value) const
+{
+
+}
+
+void ini_section::append(const std::string &name, const std::string &value)
+{
+
+}
+
+int ini_section::size()
+{
+
+}
+
+std::string ini_section::str() const
+{
+
+}
+
+void ini_section::clear()
 {
     if (m_section != nullptr)
     {

@@ -171,21 +171,40 @@ void xml::remove(const std::string &name)
     }
 }
 
-bool xml::has(int index)
+bool xml::has(int index) const
 {
-    
+    if ((m_children == nullptr) && (m_children->size() > index))
+    {
+        return true;
+    }
+    return false;
 }
 
-bool xml::has(const std::string &key)
+bool xml::has(const std::string &key) const
 {
+    if ((m_attrs == nullptr) && (m_attrs->find(key) != m_attrs->end()))
+    {
+        return true;
+    }
+    return false;
 }
 
-bool xml::has_name()
+bool xml::has_name() const
 {
+    if ((m_name == nullptr) && (m_name->size() > 0))
+    {
+        return true;
+    }
+    return false;
 }
 
-bool xml::has_text()
+bool xml::has_text() const
 {
+    if ((m_text == nullptr) && (m_text->size() > 0))
+    {
+        return true;
+    }
+    return false;
 }
 
 std::string xml::str() const
@@ -545,10 +564,10 @@ std::string xml_head::file() const
     return m_path;
 }
 
-bool xml_head::open(const std::string &str)
+bool xml_head::open(const std::string &load_path)
 {
-    m_path = str;
-    std::string temp_str = get_file_str(str);
+    m_path = load_path;
+    std::string temp_str = get_file_str(load_path);
     parse(temp_str);
     return 0;
 }
@@ -556,4 +575,14 @@ bool xml_head::open(const std::string &str)
 bool xml_head::open(const char *load_path)
 {
     return open(std::string(load_path));
+}
+
+bool xml_head::save()
+{
+
+}
+
+bool xml_head::save(const std::string &load_path)
+{
+
 }

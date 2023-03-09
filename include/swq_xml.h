@@ -43,10 +43,10 @@ namespace swq
         void remove(int index);
         void remove(const std::string & name);
         void clear();
-        bool has(int index);
-        bool has(const std::string &key);
-        bool has_name();
-        bool has_text();
+        bool has(int index) const;
+        bool has(const std::string &key) const;
+        bool has_name() const;
+        bool has_text() const;
         int size();
         std::string str() const;
         
@@ -98,8 +98,14 @@ namespace swq
 
         // 根据路径打开文件
 
-        bool open(const std::string &str);
+        bool open(const std::string &load_path);
         bool open(const char *load_path);
+
+        //根据路径保存文件
+
+        bool save();
+        bool save(const std::string &load_path);
+
 
     private:
         std::string m_path;
