@@ -76,6 +76,12 @@ json::json(type input_t)
     }
 }
 
+json::~json()
+{
+    this->clear();
+}
+
+
 json::operator bool()
 {
     switch (m_type)
@@ -406,22 +412,6 @@ void json::append(const json &value)
         m_value.m_array = new std::list<json>();
     }
     (m_value.m_array)->emplace_back(value);
-}
-
-bool json::isempty() const
-{
-    switch (m_type)
-    {
-    case json_null:
-        return true;
-    case json_array:
-        return (m_value.m_array)->empty();
-    case json_object:
-        return (m_value.m_object)->empty();
-    default:
-        break;
-    }
-    return false;
 }
 
 std::string json::str() const

@@ -37,6 +37,7 @@ namespace swq
         json(const std::string &input_v);
         json(type input_t);
         json(const json &input_j);
+        ~json();
 
         // 类型转换重载
 
@@ -56,7 +57,6 @@ namespace swq
 
         // 判断函数
 
-        bool isempty() const;
         bool isNull() const;
         bool isBool() const;
         bool isInt() const;

@@ -83,7 +83,7 @@ void xml::attr(const std::string &key, const std::string &value)
     (*m_attrs)[key] = value;
 }
 
-const xml &xml::operator[](int index)
+xml &xml::operator[](int index)
 {
     if (m_children == nullptr)
     {
@@ -92,7 +92,7 @@ const xml &xml::operator[](int index)
     int size = m_children->size();
     if (index < 0)
     {
-        index = index + size;
+        index = size - index;
     }
     if (index >= size)
     {
@@ -104,7 +104,7 @@ const xml &xml::operator[](int index)
     return m_children->at(index);
 }
 
-const xml &xml::operator[](const std::string &name)
+xml &xml::operator[](const std::string &name)
 {
     if (m_attrs == nullptr)
     {
@@ -276,24 +276,6 @@ xml::iterator xml::begin()
 }
 
 xml::iterator xml::end()
-{
-    if (m_children == nullptr)
-    {
-        throw std::logic_error("xml children is empty");
-    }
-    return m_children->end();
-}
-
-xml::const_iterator xml::begin() const
-{
-    if (m_children == nullptr)
-    {
-        throw std::logic_error("xml children is empty");
-    }
-    return m_children->begin();
-}
-
-xml::const_iterator xml::end() const
 {
     if (m_children == nullptr)
     {

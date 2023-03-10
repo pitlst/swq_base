@@ -8,27 +8,22 @@
 
 ```shell
 swq_base
-├── deploy
 ├── build
 ├── doc
 ├── 3rdparty
 ├── include
-│   └── project_name
-├── project_name
+├── src
 ├── tools
 ├── scripts
-├── platforms
 ├── test
 ├── LICENSE
 ├── CMakeLists.txt
 ├── build.sh
-├── toolchain.cmake
 ├── .gitignore
 ├── readme.md
 └── sample
 ```
 
-- **deploy :** 用于存放部署、交付的文件，其包含子目录bin、lib、include分别存放本项目最总生成的可执行文件、库文件以及对外所提供的头文件。
 - **build :** 用于存放build时cmake产生的中间文件，其包含子目录release和debug。
 - **doc :** 用于存放项目的相关文档。
 - **3rdparty :** 用于存放第三方库，每个第三库以单独目录的形式组织在3rdparty目录下。其中每个第三方目录下又有 `include` 和 `lib` 分别存放第三方库的头文件和库文件。
@@ -45,4 +40,10 @@ swq_base
 - **readme.md :** 存放工程说明文件。
 - **sample :** 存放示例代码。
 
-## 
+目前已经完成的是高精度浮点数，json解析，xml解析三个部分
+
+正在编写的是自己的string和ini解析。
+
+本项目尽量做到全源代码引用和不依赖第三方库。
+
+本项目仅做过简单测试，详细单元测试没有覆盖。
