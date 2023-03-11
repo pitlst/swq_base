@@ -114,6 +114,9 @@ namespace swq
         std::deque<char> back_point = {};
     };
 
+
+//--------------------------------声明实现分界线--------------------------------
+
 #define HFLOAT_ZERO high_float::ZERO()
 #define HFLOAT_ONE high_float::ONE()
 #define HFLOAT_TWO high_float::TWO()

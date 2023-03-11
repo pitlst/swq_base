@@ -163,6 +163,8 @@ namespace swq
         std::string m_path;
     };
 
+//--------------------------------声明实现分界线--------------------------------
+
     json::json()
     {
         m_type = json_null;

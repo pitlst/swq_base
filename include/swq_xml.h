@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <fstream>
 
 #include "swq_utils.h"
 using swq::get_file_str;
@@ -107,6 +108,9 @@ namespace swq
         std::string m_str;
         size_t m_idx;
     };
+
+//--------------------------------声明实现分界线--------------------------------
+
     xml::xml() : m_name(nullptr), m_text(nullptr), m_children(nullptr), m_attrs(nullptr)
     {
     }
@@ -664,12 +668,21 @@ namespace swq
 
     bool xml_head::save()
     {
+        std::fstream fs;
+        fs.open(m_path, std::ios::out | std::ios::trunc);
+        fs << this->str();
+        fs.close();
+        return 0;
     }
 
     bool xml_head::save(const std::string &load_path)
     {
+        std::fstream fs;
+        fs.open(load_path, std::ios::out | std::ios::trunc);
+        fs << this->str();
+        fs.close();
+        return 0;
     }
-
 }
 
 #endif

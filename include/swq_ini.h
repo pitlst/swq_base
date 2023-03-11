@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <fstream>
 
 #include "swq_utils.h"
 using swq::get_file_str;
@@ -59,8 +60,8 @@ namespace swq
 
         // 添加section
 
-        void append(ini_section &y_section);
         void append(const std::string &name);
+        void append(const std::string &name, ini_section &y_section);
 
         // 根据路径保存
 
@@ -74,7 +75,7 @@ namespace swq
         void remove(const std::string &name);
 
         // 根据section的名字进行索引
-        std::string &section(const std::string &name);
+        ini_section &section(const std::string &name);
         // 返回文件路径
         std::string file() const;
         // 清除全部数据结构
@@ -106,6 +107,9 @@ namespace swq
         std::string m_str;
         size_t m_idx;
     };
+
+//--------------------------------声明实现分界线--------------------------------
+
 
     ini_section::ini_section() : m_value(nullptr)
     {
@@ -250,7 +254,9 @@ namespace swq
         }
         auto it = m_section->begin();
         for (size_t i = 0; i < index; i++)
+        {
             it++;
+        }
         return (*it).second;
     }
 
@@ -268,6 +274,168 @@ namespace swq
             }
         }
         auto it_pair = m_section->emplace(name, ini_section());
+        // 这里逻辑有点绕，标注一下
+        // 首先是pair返回值第一个是ini_head的迭代器，索引获得ini_head的引用，ini_head实际上是map。而map的第二个存储的是我们要的ini_section
+        return (*(it_pair.first)).second;
+    }
+
+    void ini_head::append(const std::string &name)
+    {
+        if (m_section == nullptr)
+        {
+            m_section = new std::map<std::string, ini_section>();
+            m_section->emplace(name, ini_section());
+        }
+        else
+        {
+            auto it = m_section->find(name);
+            if (it == m_section->end())
+            {
+                m_section->emplace(name, ini_section());
+            }
+        }
+    }
+
+    void ini_head::append(const std::string &name, ini_section &y_section)
+    {
+        if (m_section == nullptr)
+        {
+            m_section = new std::map<std::string, ini_section>();
+            m_section->emplace(name, y_section);
+        }
+        else
+        {
+            auto it = m_section->find(name);
+            if (it == m_section->end())
+            {
+                m_section->emplace(name, y_section);
+            }
+            else
+            {
+                (*it).second = y_section;
+            }
+        }
+    }
+
+    bool ini_head::save()
+    {
+        std::fstream fs;
+        fs.open(m_path, std::ios::out | std::ios::trunc);
+        fs << this->str();
+        fs.close();
+        return 0;
+    }
+
+    bool ini_head::save(const std::string &load_path)
+    {
+        std::fstream fs;
+        fs.open(load_path, std::ios::out | std::ios::trunc);
+        fs << this->str();
+        fs.close();
+        return 0;
+    }
+
+    bool ini_head::save(const char *load_path)
+    {
+        std::fstream fs;
+        fs.open(load_path, std::ios::out | std::ios::trunc);
+        fs << this->str();
+        fs.close();
+        return 0;
+    }
+
+    void ini_head::remove(int index)
+    {
+        if (m_section == nullptr)
+        {
+            m_section = new std::map<std::string, ini_section>();
+        }
+        else
+        {
+            int size = m_section->size();
+            if (index < 0)
+            {
+                index = size - index;
+            }
+            if (index < size)
+            {
+                auto it = m_section->begin();
+                for (size_t i = 0; i < index; i++)
+                {
+                    it++;
+                }
+                m_section->erase(it);
+            }
+        }
+    }
+
+    void ini_head::remove(const std::string &name)
+    {
+        if (m_section == nullptr)
+        {
+            m_section = new std::map<std::string, ini_section>();
+        }
+        else
+        {
+            auto it = m_section->find(name);
+            if (it != m_section->end())
+            {
+                m_section->erase(it);
+            }
+        }
+    }
+
+    ini_section &ini_head::section(const std::string &name)
+    {
+        if (m_section == nullptr)
+        {
+            m_section = new std::map<std::string, ini_section>();
+        }
+        auto it = m_section->find(name);
+        if (it == m_section->end())
+        {
+            auto it_pair = m_section->emplace(name, ini_section());
+            return (*(it_pair.first)).second;
+        }
+        else
+        {
+            return (*it).second;
+        }
+    }
+
+    std::string ini_head::file() const
+    {
+        return m_path;
+    }
+
+    void ini_head::clear()
+    {
+        if (m_section != nullptr)
+        {
+            for (auto &ch : (*m_section))
+            {
+                ch.second.clear();
+            }
+            m_section->clear();
+            delete m_section;
+            m_section = nullptr;
+        }
+        
+    }
+
+    std::string ini_head::str() const
+    {
+        if (m_section == nullptr)
+        {
+            return std::string();
+        }
+        std::stringstream ss;
+        for (auto &ch : (*m_section))
+        {
+            ss << "[" << ch.first << "]\n";
+            ss << ch.second.str();
+        }
+        return ss.str();
     }
 
     ini_head::iterator ini_head::begin()
