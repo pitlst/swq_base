@@ -39,7 +39,7 @@ void ini_section::append(const std::string &name, const std::string &value)
     {
         m_value = new std::map<std::string, std::string>();
     }
-    (*m_value)[name] = value;
+    (*m_value).at(name) = value;
 }
 
 void ini_section::remove(const std::string &name)
@@ -146,47 +146,43 @@ ini_section &ini_head::operator[](int index)
         throw std::logic_error("ini is small, so no required value");
     }
     auto it = m_section->begin();
-    it = it + index;
+    for (size_t i = 0; i < index; i++)
+        it++;
     return (*it).second;
 
 }
 
 ini_section &ini_head::operator[](const std::string &name)
 {
-    if (m_list == nullptr)
+    if (m_section == nullptr)
     {
         throw std::logic_error("ini is empty, so no required value");
     }
-    for (auto it = m_list->begin();it != m_list->end(); it++)
+    for (auto it = m_section->begin();it != m_section->end(); it++)
     {
-        if ((*it).section() == name)
+        if ((*it).first == name)
         {
-            
+            return (*it).second;
         }
-        
     }
+    auto it_pair = m_section->emplace(name, ini_section());
     
-
 }
 
-// 返回section的名字
-std::string &ini_section::section()
+ini_head::iterator ini_head::begin()
 {
     if (m_section == nullptr)
     {
-        m_section = new std::string();
+        m_section = new std::map<std::string ,ini_section>();
     }
-    return *m_section;
+    return m_section->begin();
 }
 
-void ini_section::section(const std::string &section)
+ini_head::iterator ini_head::end()
 {
     if (m_section == nullptr)
     {
-        m_section = new std::string(section);
+        m_section = new std::map<std::string ,ini_section>();
     }
-    else
-    {
-        *m_section = section;
-    }
+    return m_section->end();
 }

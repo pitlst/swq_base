@@ -56,18 +56,11 @@ namespace swq
         ini_section &operator[](int index);
         ini_section &operator[](const std::string &name);
 
-        // 返回section的名字
-        std::string &section();
-        // 更改section的名字
-        void section(const std::string &section);
-
         // 添加section
 
         void append(ini_section &y_section);
         void append(const std::string &name);
 
-        // 返回文件路径
-        std::string file() const;
         // 根据路径保存
 
         bool save();
@@ -79,6 +72,10 @@ namespace swq
         void remove(int index);
         void remove(const std::string &name);
 
+        // 根据section的名字进行索引
+        std::string & section(const std::string &name);
+        // 返回文件路径
+        std::string file() const;
         // 清除全部数据结构
         void clear();
         // 将配置文件序列化输出
