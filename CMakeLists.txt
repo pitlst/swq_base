@@ -15,12 +15,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 # 设置默认的编译等级
 if(NOT DEFINED CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
+    set(CMAKE_BUILD_TYPE "Debug")
 endif()
 # 可选：设置opencv的库路径
 # set(OpenCV_DIR "/home/cheakf/Downloads/opencv-4.6.0/build")
-# 开启测试
-enable_testing()
 # 指定头文件在对应的文件夹中寻找
 include_directories(include)
 
@@ -48,12 +46,20 @@ add_executable(test_high_num ${PROJECT_SOURCE_DIR}/test/test_high_num.cpp ${PROJ
 # target_link_libraries(test_ini PRIVATE pthread ${OpenCV_LIBS})
 # target_link_libraries(test_string PRIVATE pthread ${OpenCV_LIBS})
 # target_link_libraries(test_high_num PRIVATE pthread ${OpenCV_LIBS})
-
+# 开启测试
+enable_testing()
+# 为对应的目标运行脚本生成测试用文件
+add_custom_target(run_json
+    COMMAND  echo "The json file required for the test starts to be generated."
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/script/generation_josn.py ${CMAKE_CURRENT_SOURCE_DIR}
+)
+add_dependencies(test_json run_json)
 
 #------------------测试部分------------------
 add_test(NAME test_json COMMAND test_json)
-add_test(NAME test_xml COMMAND test_json)
-add_test(NAME test_ini COMMAND test_json)
-add_test(NAME test_string COMMAND test_json)
-add_test(NAME test_high_num COMMAND test_json)
+add_test(NAME test_xml COMMAND test_xml)
+add_test(NAME test_ini COMMAND test_ini)
+add_test(NAME test_string COMMAND test_string)
+add_test(NAME test_high_num COMMAND test_high_num)
+
 
