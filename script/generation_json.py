@@ -8,12 +8,18 @@ import json
 import random
 from utils import generate_random_str, generate_random_random
 
+count = 0
+
 # 随机生成单层json
 def generate_random_json():
-    article_info = {}
-    data = json.loads(json.dumps(article_info))
+    global count
+    count += 1
+    data = json.loads(json.dumps({}))
     for i in range(random.randint(1,20)):
-        data[generate_random_str(random.randint(1,16))] = generate_random_random()
+        if random.randint(0,1) and count < 10:
+            data[generate_random_str(random.randint(1,16))] = generate_random_json()
+        else:
+            data[generate_random_str(random.randint(1,16))] = generate_random_random()
     return data
     
 

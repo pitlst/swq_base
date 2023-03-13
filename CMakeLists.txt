@@ -51,7 +51,7 @@ enable_testing()
 # 为对应的目标运行脚本生成测试用文件
 add_custom_target(run_json
     COMMAND  echo "The json file required for the test starts to be generated."
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/script/generation_josn.py ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/script/generation_json.py ${CMAKE_CURRENT_SOURCE_DIR}
 )
 add_dependencies(test_json run_json)
 

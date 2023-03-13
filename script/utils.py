@@ -16,6 +16,11 @@ def generate_random_str(randomlength = 16):
         random_str += base_str[random.randint(0, length)]
     return random_str
 
+# 随机生成xml字符串
+def generate_xml_str(randomlength = 15):
+    # randomlength 是生成值的长度
+    return base_str[random.randint(0, len(base_str)-11)] + generate_random_str(randomlength)
+
 # 随机生成变量
 def generate_random_random(temp = 0):
     if temp == 0:
