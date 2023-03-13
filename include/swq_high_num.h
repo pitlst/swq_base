@@ -114,13 +114,12 @@ namespace swq
         std::deque<char> back_point = {};
     };
 
-
-//--------------------------------声明实现分界线--------------------------------
-
 #define HFLOAT_ZERO high_float::ZERO()
 #define HFLOAT_ONE high_float::ONE()
 #define HFLOAT_TWO high_float::TWO()
 #define HFLOAT_TEN high_float::TEN()
+
+//--------------------------------声明实现分界线--------------------------------
 
     // 命名空间内的友元公共函数需要在同一命名空间下声明实现
     // 基本运算符重载

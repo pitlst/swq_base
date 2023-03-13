@@ -574,6 +574,7 @@ namespace swq
     std::string json::str() const
     {
         std::stringstream ss;
+        std::cout << "str start" << std::endl;
         switch (m_type)
         {
         case json_null:

@@ -103,6 +103,7 @@ namespace swq
         ini_head parse();
 
     private:
+        
     private:
         std::string m_str;
         size_t m_idx;

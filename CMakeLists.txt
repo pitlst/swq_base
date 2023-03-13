@@ -31,16 +31,17 @@ FILE (GLOB M_SRCS "src/*.cpp")
 # 找到所有声明，保存到变量里
 FILE (GLOB M_INCLUDES "include/*.h")
 # 找到需要的依赖
-# find_package(OpenCV REQUIRED)
-# 导入头文件
-# include_directories(${OpenCV_INCLUDE_DIRS})
-# 生成目标可执行文件
-add_executable(test_json ${PROJECT_SOURCE_DIR}/test/test_json.cpp ${M_SRCS} ${M_INCLUDES})
+find_package(OpenCV REQUIRED)
+find_package(PythonInterp REQUIRED)
 
-add_executable(test_xml ${PROJECT_SOURCE_DIR}/test/test_xml.cpp ${M_SRCS} ${M_INCLUDES})
-add_executable(test_ini ${PROJECT_SOURCE_DIR}/test/test_ini.cpp ${M_SRCS} ${M_INCLUDES})
-add_executable(test_string ${PROJECT_SOURCE_DIR}/test/test_string.cpp ${M_SRCS} ${M_INCLUDES})
-add_executable(test_high_num ${PROJECT_SOURCE_DIR}/test/test_high_num.cpp ${M_SRCS} ${M_INCLUDES})
+# 导入头文件
+include_directories(${OpenCV_INCLUDE_DIRS})
+# 生成目标可执行文件
+add_executable(test_json ${PROJECT_SOURCE_DIR}/test/test_json.cpp ${PROJECT_SOURCE_DIR}/include/swq_json.h ${PROJECT_SOURCE_DIR}/include/swq_utils.h)
+add_executable(test_xml ${PROJECT_SOURCE_DIR}/test/test_xml.cpp ${PROJECT_SOURCE_DIR}/include/swq_xml.h ${PROJECT_SOURCE_DIR}/include/swq_utils.h)
+add_executable(test_ini ${PROJECT_SOURCE_DIR}/test/test_ini.cpp ${PROJECT_SOURCE_DIR}/include/swq_ini.h ${PROJECT_SOURCE_DIR}/include/swq_utils.h)
+add_executable(test_string ${PROJECT_SOURCE_DIR}/test/test_string.cpp ${PROJECT_SOURCE_DIR}/include/swq_string.h ${PROJECT_SOURCE_DIR}/include/swq_utils.h)
+add_executable(test_high_num ${PROJECT_SOURCE_DIR}/test/test_high_num.cpp ${PROJECT_SOURCE_DIR}/include/swq_high_num.h)
 # 链接动态库
 # target_link_libraries(test_json PRIVATE pthread ${OpenCV_LIBS})
 # target_link_libraries(test_xml PRIVATE pthread ${OpenCV_LIBS})
