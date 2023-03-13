@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <fstream>
 #include <iostream>
 #include <stdexcept>
 
@@ -40,7 +41,6 @@ namespace swq
         json(const std::string &input_v);
         json(type input_t);
         json(const json &input_j);
-        ~json();
 
         // 类型转换重载
 
@@ -159,11 +159,17 @@ namespace swq
         bool open(const std::string &str);
         bool open(const char *load_path);
 
+        // 根据路径保存文件
+
+        bool save();
+        bool save(const std::string &str);
+        bool save(const char *path);
+
     private:
         std::string m_path;
     };
 
-//--------------------------------声明实现分界线--------------------------------
+    //--------------------------------声明实现分界线--------------------------------
 
     json::json()
     {
@@ -232,11 +238,6 @@ namespace swq
         default:
             break;
         }
-    }
-
-    json::~json()
-    {
-        this->clear();
     }
 
     json::operator bool()
@@ -574,7 +575,6 @@ namespace swq
     std::string json::str() const
     {
         std::stringstream ss;
-        std::cout << "str start" << std::endl;
         switch (m_type)
         {
         case json_null:
@@ -597,7 +597,7 @@ namespace swq
             ss << m_value.m_double;
             break;
         case json_string:
-            ss << '\"' << *(m_value.m_string) << '\"';
+            ss << '\"' << (*m_value.m_string) << '\"';
             break;
         case json_array:
         {
@@ -1074,6 +1074,37 @@ namespace swq
     bool json_head::open(const char *load_path)
     {
         return open(std::string(load_path));
+    }
+
+    bool json_head::save()
+    {
+        std::fstream fs;
+        fs.open(m_path, std::ios::out | std::ios::trunc);
+        if (!fs.is_open())
+        {
+            throw std::logic_error("read filure");
+        }
+        fs << this->str();
+        fs.close();
+        return 0;
+    }
+
+    bool json_head::save(const std::string &str)
+    {
+        std::fstream fs;
+        fs.open(str, std::ios::out | std::ios::trunc);
+        if (!fs.is_open())
+        {
+            throw std::logic_error("read filure");
+        }
+        fs << this->str();
+        fs.close();
+        return 0;
+    }
+
+    bool json_head::save(const char *path)
+    {
+        return save(std::string(path));
     }
 
 }

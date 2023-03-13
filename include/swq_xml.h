@@ -21,7 +21,6 @@ namespace swq
         xml(const char *name);
         xml(const std::string &name);
         xml(const std::string &name, const std::string &text);
-        ~xml();
 
         // 重载函数
 
@@ -129,11 +128,6 @@ namespace swq
     {
         m_name = new std::string(name);
         m_text = new std::string(text);
-    }
-
-    xml::~xml()
-    {
-        clear();
     }
 
     std::string xml::name() const

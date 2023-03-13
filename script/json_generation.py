@@ -1,3 +1,9 @@
+#!/usr/bin/python3
+# -*- coding:utf-8 -*-
+'''
+本文件用于在编译时随机生成一个在asset文件夹中的测试json
+放便对json库进行测试
+'''
 import json
 import random
 
