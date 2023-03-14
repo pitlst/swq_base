@@ -22,7 +22,10 @@ namespace swq
         // 返回name对应的value
         std::string &value(const std::string &name);
         // 添加对应的参数
+
         void append(const std::string &name, const std::string &value);
+        void append(const ini_section &input);
+
         // 清除指定的value
         void remove(const std::string &name);
         // 清除全部的数据结构
@@ -82,6 +85,8 @@ namespace swq
         void clear();
         // 将配置文件序列化输出
         std::string str() const;
+        // 获取当前有多少个section
+        int size() const;
 
         // 迭代器
         typedef std::map<std::string, ini_section>::iterator iterator;
@@ -103,14 +108,11 @@ namespace swq
         ini_head parse();
 
     private:
-        
-    private:
         std::string m_str;
         size_t m_idx;
     };
 
-//--------------------------------声明实现分界线--------------------------------
-
+    //--------------------------------声明实现分界线--------------------------------
 
     ini_section::ini_section() : m_value(nullptr)
     {
@@ -148,6 +150,15 @@ namespace swq
             m_value = new std::map<std::string, std::string>();
         }
         (*m_value).at(name) = value;
+    }
+
+    void ini_section::append(const ini_section &input)
+    {
+        if (m_value == nullptr)
+        {
+            m_value = new std::map<std::string, std::string>();
+        }
+        (*m_value).emplace(*input.m_value);
     }
 
     void ini_section::remove(const std::string &name)
@@ -421,7 +432,6 @@ namespace swq
             delete m_section;
             m_section = nullptr;
         }
-        
     }
 
     std::string ini_head::str() const
@@ -437,6 +447,15 @@ namespace swq
             ss << ch.second.str();
         }
         return ss.str();
+    }
+
+    int ini_head::size() const
+    {
+        if (m_section == nullptr)
+        {
+            return 0;
+        }
+        return m_section->size();
     }
 
     ini_head::iterator ini_head::begin()
@@ -456,6 +475,105 @@ namespace swq
         }
         return m_section->end();
     }
+
+    parser_i::parser_i()
+    {
+    }
+
+    parser_i::parser_i(const std::string &str) : m_str(str)
+    {
+    }
+
+    void parser_i::load(const std::string &str)
+    {
+        m_str = str;
+    }
+
+    ini_head parser_i::parse()
+    {
+        // 获取的字符串为空就直接输出空
+        if (m_idx == m_str.size() || m_str[m_idx] == '\0')
+        {
+            return ini_head();
+        }
+        ini_head elem;
+        char ch;
+        std::string last_name;
+        auto limit = m_str.size();
+        while (m_idx < limit)
+        {
+            ch = m_str[m_idx];
+            switch (ch)
+            {
+            // 如果遇到注释就跳过直到下一行
+            case ';':
+            {
+                do
+                {
+                    m_idx++;
+                    ch = m_str[m_idx];
+                } while ((ch != '\n') && (ch != '\r'));
+                m_idx++;
+            }
+            break;
+            // 如果遇到空行跳过
+            case '\r':
+            case '\n':
+            {
+                m_idx++;
+            }
+            break;
+            // 如果遇到seection
+            case '[':
+            {
+                // 获取section的名字
+                m_idx++;
+                auto temp_label = m_idx;
+                while (ch != ']')
+                {
+                    m_idx++;
+                    ch = m_str[m_idx];
+                }
+                std::string name = m_str.substr(temp_label, m_idx - temp_label);
+                last_name = name;
+                elem.append(name);
+                m_idx++;
+            }
+            // 如果遇到其他字符默认为一条参数
+            default:
+            {
+                // 检查一下当前是否有section
+                if (elem.size() > 0)
+                {
+                    auto temp_label = m_idx;
+                    while (ch != '=')
+                    {
+                        m_idx++;
+                        ch = m_str[m_idx];
+                    }
+                    std::string name = m_str.substr(temp_label, m_idx - temp_label);
+                    m_idx++;
+                    temp_label = m_idx;
+                    while ((ch != '\r') && (ch != '\n'))
+                    {
+                        m_idx++;
+                        ch = m_str[m_idx];
+                    }
+                    std::string value = m_str.substr(temp_label, m_idx - temp_label);
+                    elem[last_name].append(name, value);
+                }
+                // 没有section还有非法字符直接停止解析
+                else
+                {
+                    throw std::logic_error("unexpected end of input in string");
+                }
+            }
+            break;
+            }
+        }
+        return elem;
+    }
+
 }
 
 #endif

@@ -335,7 +335,7 @@ namespace swq
         {
             os << *m_text;
         }
-        os << "</" << m_name << ">";
+        os << "</" << *m_name << ">";
         return os.str();
     }
 
@@ -409,7 +409,7 @@ namespace swq
         skip_white_spaces();
         if (m_idx == m_str.size() || m_str[m_idx] == '\0')
         {
-            throw std::logic_error("xml document is empty");
+            return xml();
         }
 
         // parse xml declaration

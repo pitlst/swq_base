@@ -54,6 +54,11 @@ add_custom_target(run_json
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/script/generation_json.py ${CMAKE_CURRENT_SOURCE_DIR}
 )
 add_dependencies(test_json run_json)
+add_custom_target(run_xml
+    COMMAND  echo "The xml file required for the test starts to be generated."
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/script/generation_xml.py ${CMAKE_CURRENT_SOURCE_DIR}
+)
+add_dependencies(test_xml run_xml)
 
 #------------------测试部分------------------
 add_test(NAME test_json COMMAND test_json)
