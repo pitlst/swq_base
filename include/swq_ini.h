@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <iostream>
 
 #include "swq_utils.h"
 using swq::get_file_str;
@@ -15,17 +16,13 @@ namespace swq
     {
     public:
         ini_section();
-        ~ini_section();
 
         // 重载函数
         std::string &operator[](const std::string &name);
         // 返回name对应的value
         std::string &value(const std::string &name);
         // 添加对应的参数
-
         void append(const std::string &name, const std::string &value);
-        void append(const ini_section &input);
-
         // 清除指定的value
         void remove(const std::string &name);
         // 清除全部的数据结构
@@ -49,7 +46,6 @@ namespace swq
     {
     public:
         ini_head();
-        ~ini_head();
 
         // 根据路径打开文件
 
@@ -108,6 +104,8 @@ namespace swq
         ini_head parse();
 
     private:
+        std::string &ClearHeadTailSpace(std::string &str);
+
         std::string m_str;
         size_t m_idx;
     };
@@ -116,11 +114,6 @@ namespace swq
 
     ini_section::ini_section() : m_value(nullptr)
     {
-    }
-
-    ini_section::~ini_section()
-    {
-        this->clear();
     }
 
     std::string &ini_section::operator[](const std::string &name)
@@ -149,16 +142,15 @@ namespace swq
         {
             m_value = new std::map<std::string, std::string>();
         }
-        (*m_value).at(name) = value;
-    }
-
-    void ini_section::append(const ini_section &input)
-    {
-        if (m_value == nullptr)
+        auto it = m_value->find(name);
+        if (it == m_value->end())
         {
-            m_value = new std::map<std::string, std::string>();
+            m_value->emplace(name, value);
         }
-        (*m_value).emplace(*input.m_value);
+        else
+        {
+            (*m_value).at(name) = value;
+        }
     }
 
     void ini_section::remove(const std::string &name)
@@ -228,11 +220,6 @@ namespace swq
 
     ini_head::ini_head() : m_section(nullptr)
     {
-    }
-
-    ini_head::~ini_head()
-    {
-        this->clear();
     }
 
     bool ini_head::open(const std::string &load_path)
@@ -476,11 +463,11 @@ namespace swq
         return m_section->end();
     }
 
-    parser_i::parser_i()
+    parser_i::parser_i() : m_idx(0), m_str("")
     {
     }
 
-    parser_i::parser_i(const std::string &str) : m_str(str)
+    parser_i::parser_i(const std::string &str) : m_idx(0), m_str(str)
     {
     }
 
@@ -535,10 +522,12 @@ namespace swq
                     ch = m_str[m_idx];
                 }
                 std::string name = m_str.substr(temp_label, m_idx - temp_label);
+                name = ClearHeadTailSpace(name);
                 last_name = name;
                 elem.append(name);
                 m_idx++;
             }
+            break;
             // 如果遇到其他字符默认为一条参数
             default:
             {
@@ -552,6 +541,7 @@ namespace swq
                         ch = m_str[m_idx];
                     }
                     std::string name = m_str.substr(temp_label, m_idx - temp_label);
+                    name = ClearHeadTailSpace(name);
                     m_idx++;
                     temp_label = m_idx;
                     while ((ch != '\r') && (ch != '\n'))
@@ -560,6 +550,7 @@ namespace swq
                         ch = m_str[m_idx];
                     }
                     std::string value = m_str.substr(temp_label, m_idx - temp_label);
+                    value = ClearHeadTailSpace(value);
                     elem[last_name].append(name, value);
                 }
                 // 没有section还有非法字符直接停止解析
@@ -572,6 +563,19 @@ namespace swq
             }
         }
         return elem;
+    }
+
+    // 去掉收尾空格
+    std::string &parser_i::ClearHeadTailSpace(std::string &str)
+    {
+        if (str.empty())
+        {
+            return str;
+        }
+
+        str.erase(0, str.find_first_not_of(" "));
+        str.erase(str.find_last_not_of(" ") + 1);
+        return str;
     }
 
 }

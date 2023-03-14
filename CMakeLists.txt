@@ -59,6 +59,11 @@ add_custom_target(run_xml
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/script/generation_xml.py ${CMAKE_CURRENT_SOURCE_DIR}
 )
 add_dependencies(test_xml run_xml)
+add_custom_target(run_ini
+    COMMAND  echo "The ini file required for the test starts to be generated."
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/script/generation_ini.py ${CMAKE_CURRENT_SOURCE_DIR}
+)
+add_dependencies(test_ini run_ini)
 
 #------------------测试部分------------------
 add_test(NAME test_json COMMAND test_json)
